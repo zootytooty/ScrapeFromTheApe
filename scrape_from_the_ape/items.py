@@ -9,6 +9,12 @@ import scrapy
 
 
 class ScrapeFromTheApeItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+    
+    title = scrapy.Field()
+    music_starts = scrapy.Field()
+    doors_open = scrapy.Field()
+    date = scrapy.Field()
+    price = scrapy.Field()
+    desc = scrapy.Field()
+    url = scrapy.Field()
+    image_url = scrapy.Field()
