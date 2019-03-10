@@ -1,11 +1,14 @@
-#%%
+"""
+Title: Paris Cat Utilities
+"""
+
 import requests
 from datetime import datetime
 from bs4 import BeautifulSoup as bs
-from bs4 import element.Tag
+from bs4.element import Tag
+from ..items import *
 
 
-#%%
 def gig_details(music_starts, doors_open, date, title, price, desc, url, image_url):
 
     return {
@@ -19,7 +22,16 @@ def gig_details(music_starts, doors_open, date, title, price, desc, url, image_u
         "image_irl": image_url
     }
 
-def name_splitter(name):
+
+def name_splitter(name: str):
+    """Extract gig name & start time from string
+    
+    Args:
+        name (str): name item from ParisCat GetStack
+    
+    Returns:
+        str, str: title, start_time
+    """
 
     # Initialise Reponse Variables
     title = None
@@ -27,13 +39,13 @@ def name_splitter(name):
 
     # Generally titla & start time are provided in a single string split by either "//" or "/"
     start_name_split = [x.strip('/').strip() for x in name.split('/',1) if x != '']
-
     if len(start_name_split) == 2:
         title = start_name_split[1]
         start_time = start_name_split[0]
         
         return start_time, title
 
+    # Some names don't contain a start time & thus are length 1
     elif len(start_name_split) == 1:
 
         title = start_name_split[0]
@@ -42,8 +54,15 @@ def name_splitter(name):
     return start_time, title
 
 
-
-def pariscat_gig_parser(gig):
+def pariscat_gig_parser(gig: dict):
+    """Orchestrates cleaning & enriching scraped gigs
+    
+    Args:
+        gig (dict): JSON Object from ParisCat GetStack
+    
+    Returns:
+        ScrapeFromTheApeItem: Enriched results
+    """
 
     # Title & start time are provided in a single string split by "//"
     start_time, title = name_splitter(gig['name'])
@@ -55,23 +74,36 @@ def pariscat_gig_parser(gig):
                    gig['description']
                    )
 
+    # Instantiate Return Object
+    item = ScrapeFromTheApeItem()
 
-    return gig_details(
-        title = title,
-        music_starts = start_time,
-        doors_open = gig['availabilityDescriptionOverride'].replace('doors open ', ''),
-        date = datetime.strptime(str(gig['dateIndex']), "%Y%m%d").strftime("%Y-%m-%d"),
-        price = gig['totalCostDescription'],
-        desc = desc,
-        url = gig['detailsUrl'],
-        image_url = gig['imageUrl']
-    )
+    # Fill
+    item['title'] = title
+    item['music_starts'] = start_time
+    item['doors_open'] = gig['availabilityDescriptionOverride'].replace('doors open ', '')
+    item['date'] = datetime.strptime(str(gig['dateIndex']), "%Y%m%d").strftime("%Y-%m-%d")
+    item['price'] = gig['totalCostDescription']
+    item['desc'] = desc
+    item['url'] = gig['detailsUrl']
+    item['image_url'] = gig['imageUrl']
+
+    return item
 
 
+#********************************************************
+## DESCRIPTION HELPERS
+#********************************************************
 
-
-#%%
-def widget_content(product_id, date_index):
+def widget_content(product_id: int, date_index: int):
+    """Gets gig details from the product API
+    
+    Args:
+        product_id (int): productId from ParisCat GetStack
+        date_index (int): dateIndex from ParisCat GetStack
+    
+    Returns:
+        dict: Product API JSON
+    """
 
     description_url = "https://api.rollerdigital.com/api/products/availabilities/widget"
     headers = {
@@ -90,15 +122,34 @@ def widget_content(product_id, date_index):
         return None
 
 
-def text_extraction(x):
+def text_extraction(desc: str):
+    """Extracts text item from description
+    
+    Args:
+        desc (str): Products description
+    
+    Returns:
+        str: Description text
+    """
 
-    if isinstance(x, element.Tag):
-        return x.text
+    if isinstance(desc, Tag):
+        return desc.text
     else:
-        return x
+        return desc
 
 
-def description_getter(product_id, date_index, title, raw_short_desc):
+def description_getter(product_id: int, date_index: int, title: str, raw_short_desc: str):
+    """Sources long description, cleans it & returns it
+    
+    Args:
+        product_id (int): productId from ParisCat GetStack
+        date_index (int): dateIndex from ParisCat GetStack
+        title (str): Extracted gig title
+        raw_short_desc (str): description from ParisCat GetStack
+    
+    Returns:
+        str: Long description for the show
+    """
 
     # 1. Get gig page content
     content = widget_content(product_id, date_index)
@@ -116,18 +167,7 @@ def description_getter(product_id, date_index, title, raw_short_desc):
                                          x != title and 
                                          x not in short_desc]
 
+    # Assume there are no spaces between list items
     return ' '.join(long_desc)
 
 
-
-
-
-#%%
-# Get Gigs
-
-url = "http://api.rollerdigital.com/v1/products/GetStack?token=pariscat&date=10032019&days=90"
-results = requests.get(url)
-
-
-#%%
-paris_cat_gigs = [pariscat_gig_parser(x) for x in results.json()]
