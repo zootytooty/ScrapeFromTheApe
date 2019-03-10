@@ -5,12 +5,13 @@ import scrapy
 class JazzlabSpider(scrapy.Spider):
     name = 'jazzlab'
     base_url = 'https://jazzlab.club'
-    page = 0
+    results_per_page = 12
     start_urls = []
 
-    while page < 48:
+    num_pages = 5
+    for page in range(0, (num_pages * results_per_page + 1), results_per_page):
         start_urls.append(f'{base_url}/?layout=timeline&start={page}')
-        page +=12
+
 
     custom_settings={ 'FEED_URI': "jazzlab.json",
                        'FEED_FORMAT': 'json'}
