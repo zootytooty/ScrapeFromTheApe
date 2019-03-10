@@ -2,7 +2,7 @@
 import scrapy
 import json
 from datetime import datetime
-from scrape_from_the_ape.utils.paris_cat_helper import *
+from scrape_from_the_ape.utils.paris_cat_helpers import *
 
 
 class ParisCatSpider(scrapy.Spider):
