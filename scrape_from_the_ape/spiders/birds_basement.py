@@ -15,20 +15,12 @@ class BirdsBasementSpider(scrapy.Spider):
 
     def parse(self, response):
         
+        # Extract JSON Objects, aka show details, from response
         shows = content_extractor(response)
 
         # Parse each show
         for show in shows:
-
-            print('')
-            print("#### SHOW TITLE ####")
-            print(show['title'])
-            print("#### SHOW TITLE ####")
-            print('')
-
             gigs = birds_parser(show)
-
-            print(len(gigs))
 
             # Return each gig object back for scrapy to capture
             for gig in gigs:

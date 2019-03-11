@@ -43,7 +43,7 @@ def date_range_generator(dates: list):
     dates = [datetime.strptime(date, "%Y-%m-%d") for date in dates]
 
     # Determine how many days to count forward
-    delta = dates[1] - dates[0]
+    delta = max(dates) - min(dates)
 
     # Generate date range
     return [(dates[0] + timedelta(i)).strftime("%Y-%m-%d") for i in range(delta.days + 1)]
