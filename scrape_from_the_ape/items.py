@@ -10,6 +10,7 @@ import scrapy
 
 class ScrapeFromTheApeItem(scrapy.Item):
     
+    venue = scrapy.Field()
     title = scrapy.Field()
     music_starts = scrapy.Field()
     doors_open = scrapy.Field()

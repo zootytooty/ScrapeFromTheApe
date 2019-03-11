@@ -15,6 +15,9 @@ SPIDER_MODULES = ['scrape_from_the_ape.spiders']
 NEWSPIDER_MODULE = 'scrape_from_the_ape.spiders'
 
 
+FEED_URI = "scraped_gigs.json"
+FEED_FORMAT = "json"
+
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'scrape_from_the_ape (+http://www.yourdomain.com)'
 

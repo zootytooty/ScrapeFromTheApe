@@ -9,10 +9,6 @@ class BirdsBasementSpider(scrapy.Spider):
 
     start_urls = ["https://birdsbasement.com/whats-on"]
 
-    custom_settings={ 'FEED_URI': "birds_basement.json",
-                       'FEED_FORMAT': 'json'}
-
-
     def parse(self, response):
         
         # Extract JSON Objects, aka show details, from response
@@ -24,4 +20,5 @@ class BirdsBasementSpider(scrapy.Spider):
 
             # Return each gig object back for scrapy to capture
             for gig in gigs:
+                gig['venue'] = self.name
                 yield gig

@@ -8,10 +8,6 @@ from scrape_from_the_ape.utils.paris_cat_helpers import *
 class ParisCatSpider(scrapy.Spider):
     name = 'paris_cat'
 
-    custom_settings={ 'FEED_URI': "paris_cat.json",
-                       'FEED_FORMAT': 'json'}
-
-
     def start_requests(self):
 
         # Generate URL
@@ -31,6 +27,7 @@ class ParisCatSpider(scrapy.Spider):
         json_response = json.loads(response.body_as_unicode())
         for item in json_response:
             gig = pariscat_gig_parser(item)
+            gig['venue'] = self.name
             yield(gig)
 
         

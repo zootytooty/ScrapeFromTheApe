@@ -12,11 +12,6 @@ class JazzlabSpider(scrapy.Spider):
     for page in range(0, (num_pages * results_per_page + 1), results_per_page):
         start_urls.append(f'{base_url}/?layout=timeline&start={page}')
 
-
-    custom_settings={ 'FEED_URI': "jazzlab.json",
-                       'FEED_FORMAT': 'json'}
-
-
     def parse(self, response):
         divs = response.css(".eb-category-1")
         
@@ -43,5 +38,6 @@ class JazzlabSpider(scrapy.Spider):
             gig['url'] = "{}{}".format(self.base_url, div.css(".eb-event-title::attr(href)").extract_first())
             gig['image_url'] = "{}{}".format(self.base_url, div.css(".eb-modal::attr(href)").extract_first())
 
-
+            gig['venue'] = self.name
+            
             yield gig
