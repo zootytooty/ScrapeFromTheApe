@@ -1,5 +1,6 @@
 """
-Title: Paris Cat Utilities
+Title: Paris Cat Helpers
+Desc:  A collection of utility functions to organise parsing Paris Cat
 """
 
 import requests
