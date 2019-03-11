@@ -5,7 +5,7 @@ Melbourne jazz gig scraper. The scaper is designed for:
 **Implemented**
 * [Jazzlab](https://jazzlab.club/)
 * [Paris Cat](http://pariscat.com.au/)
-* [Birds Basement](https://birdsbasement.com) (*In Progress*)
+* [Birds Basement](https://birdsbasement.com)
 
 **To-Do**
 
