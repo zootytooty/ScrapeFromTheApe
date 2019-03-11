@@ -1,10 +1,13 @@
-""""
-
+"""
+Title: Birds Basement Helpers
+Desc:  A collection of utility functions to organise parsing birds basement
 """
 
 import json
 from datetime import timedelta, datetime
+import requests
 from scrape_from_the_ape.items import *
+import scrapy
 
 
 def content_extractor(html):
@@ -65,6 +68,11 @@ def birds_parser(gig: dict):
     if len(dates) == 2:
         dates = date_range_generator(dates)
     
+
+    # Determine doors open & start time
+    start_time = get_start_time(gig['urlInfo'])
+    doors_open = calc_open_doors(start_time)
+
     # For consistency we want a new object for each date a show is to be played
     gigs = []
     for date in dates:
@@ -72,8 +80,8 @@ def birds_parser(gig: dict):
         item = ScrapeFromTheApeItem()
 
         item['title'] = gig['title']
-        # item['music_starts'] =
-        # item['doors_open'] =
+        item['music_starts'] = start_time
+        item['doors_open'] = doors_open
         item['date'] = date
         item['price'] = gig['price']
         item['desc'] = gig['text']
@@ -83,3 +91,74 @@ def birds_parser(gig: dict):
         gigs.append(item)
 
     return gigs
+
+
+def is_time(time_string: str):
+    """ Checks whether a string is a time
+    
+    Args:
+        time_string (str): String to check
+    
+    Returns:
+        boolean: True/False indicator for whether or not the string is a time
+    """
+
+    # Remove any am/pm identifiers
+    time_string = time_string.lower().replace('am','').replace('pm','').strip()
+
+    # Timestamp conversion attempt will identity times vs other
+    try:
+        datetime.strptime(time_string, '%H:%M')
+        return True
+    except ValueError:
+        return False
+
+
+def get_start_time(show_url: str, show_identifier: str = "Show:"):
+    """Extract show start time from gig site
+    
+    Args:
+        show_url (str): Birds basebasement specific show page
+        show_identifier (str, optional): Defaults to "Show:". Start time prefix to split on
+    
+    Returns:
+        str: Start Time
+    """
+
+    # Downloads HTML & creates a scrapy object
+    response = scrapy.http.HtmlResponse(url = "Birds Gig", body=(requests.get(show_url)).text, encoding='utf-8')
+
+    # The "n-text" class corressponds to the price & start time items
+    show_items = [x.strip() for x in response.css(".n-text p::text").extract() if x.strip() != '' and show_identifier in x]
+
+    # If the above worked correctly there should only be 1 item returned
+    # Need to figure out how to handles situations when that's not true.
+    if len(show_items) == 1:
+        start_splits = [x.strip() for x in show_items[0].split(show_identifier)]
+
+        # One of the split items should be a string containing the start time
+        # Check for & return that
+        return [x for x in start_splits if is_time(x)][0]
+
+
+
+def calc_open_doors(start_time: str):
+    """Given start time, calculates the time doors open
+    From: https://birdsbasement.com/help
+    
+    Args:
+        start_time (str): Show start time
+    
+    Returns:
+        str: Doors open time
+    """
+
+    # Convert to proper time object
+    start_time = start_time.lower().replace('am','').replace('pm','').strip()
+    start_time = datetime.strptime(start_time, '%H:%M')
+    
+    # Early gigs
+    if start_time.hour < 10:
+        return "6:00 pm"
+    else:
+        return "10:00 pm"
