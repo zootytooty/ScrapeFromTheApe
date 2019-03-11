@@ -16,12 +16,19 @@ Melbourne jazz gig scraper. The scaper is designed for:
 
 ## Running the scraper
 
-To run the scraper, cd into the repository & execute:
-
+First, ensure all libraries are installed:
 ```bash
 cd ScrapeFromTheApe
-
 pip install requirements.txt
+```
 
+To run a single spider, run:
+
+```bash
 scrapy crawl jazzlab
+```
+
+To run all spiders, run:
+```bash
+python crawl_all.py
 ```

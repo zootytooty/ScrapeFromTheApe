@@ -1,3 +1,5 @@
 scrapy
 requests
 beautifulsoup4
+pyyaml
+psycopg2

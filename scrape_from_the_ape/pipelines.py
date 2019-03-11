@@ -37,7 +37,7 @@ class ScrapeFromTheApePipeline(object):
                 item['venue'],
                 item['title'].replace("'",""),
                 item['music_starts'],
-                item['doors_open'],
+                item['doors_open'].replace("'",""),
                 item['date'],
                 item['price'],
                 item['desc'].replace("'",""),
@@ -45,6 +45,11 @@ class ScrapeFromTheApePipeline(object):
                 item['image_url']
             )
 
-        self.cur.execute(insert_qry)
-        self.connection.commit()
+        try:
+            self.cur.execute(insert_qry)
+            self.connection.commit()
+        except:
+            print("")
+            print(insert_qry)
+        
         return item
