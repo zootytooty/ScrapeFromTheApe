@@ -19,7 +19,7 @@ Melbourne jazz gig scraper. The scaper is designed for:
 First, ensure all libraries are installed:
 ```bash
 cd ScrapeFromTheApe
-pip install requirements.txt
+pip install -r requirements.txt
 ```
 
 To run a single spider, run:

@@ -3,3 +3,5 @@ requests
 beautifulsoup4
 pyyaml
 psycopg2
+MySQLdb
+dateparser
