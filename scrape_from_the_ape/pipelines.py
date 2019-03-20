@@ -44,7 +44,7 @@ class ScrapeFromTheApePipeline(object):
             str_date = "{}-{}-{}".format(parsed_date.year,parsed_date.month,parsed_date.day)
 			
         insert_qry = """
-            insert into gig_guide (venue, title, music_starts, doors_open, performance_date, price, description, url, image_url) 
+            insert into gig_guide_tmp (venue, title, music_starts, doors_open, performance_date, price, description, url, image_url) 
             values('{}','{}','{}','{}', '{}' ,'{}','{}','{}','{}')
             """.format(
                 item['venue'],
