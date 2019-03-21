@@ -7,6 +7,7 @@ Melbourne jazz gig scraper. The scaper is designed for:
 * [Paris Cat](http://pariscat.com.au/)
 * [Birds Basement](https://birdsbasement.com)
 * [Open Studio](http://openstudio.net.au)
+* [Bar 303](http://303.net.au)
 
 **To-Do**
 
