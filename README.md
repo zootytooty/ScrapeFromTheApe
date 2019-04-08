@@ -8,12 +8,25 @@ Melbourne jazz gig scraper. The scaper is designed for:
 * [Birds Basement](https://birdsbasement.com)
 * [Open Studio](http://openstudio.net.au)
 * [Bar 303](http://303.net.au)
+* [Uptown](https://www.uptownjazzcafe.com)
 
 **To-Do**
 
-* [Uptown](https://www.uptownjazzcafe.com)
-
-
+* [The Fitzroy Pinnacle](https://www.fitzroypinnacle.com.au) - PDF
+* [The Rooks Return](http://therooksreturn.com.au) - Facebook Feed (seems empty for gigs)
+* [Brunswick Green](http://www.thebrunswickgreen.com) - Squarespace
+* [Spotted Mallard](https://www.spottedmallard.com)
+* [Arts Centre](https://artscentremelbourne.com.au) - Need a genre filter for jazz/blues/funk
+* [The Night Cat](https://www.thenightcat.com.au)
+* [Dizzy Jazz Club](https://www.dizzys.com.au) - Once it reopens again
+* [Lido Jazz Room](https://www.lidocinemas.com.au)
+* [Ruby's Music Room](http://www.rubysmusicroom.com) - Relocating
+* [Vamos](https://www.vamos.net.au)
+* [Speakeasy HQ](https://speakeasy-hq.com) - Mix of genres
+* [Tranist Rooftop Bar](https://tranistrooftopbar.com.au) - Sometimes not jazz
+* [Claypots Seafood Bar](http://claypots.com.au) - Website down, only facebook at the moment
+* [Rainbow Hotel](http://therainbow.com.au)
+* [La Niche Cafe](https://lanichefitzroy.com)
 
 
 ## Running the scraper
