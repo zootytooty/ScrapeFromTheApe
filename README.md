@@ -9,13 +9,13 @@ Melbourne jazz gig scraper. The scaper is designed for:
 * [Open Studio](http://openstudio.net.au)
 * [Bar 303](http://303.net.au)
 * [Uptown](https://www.uptownjazzcafe.com)
+* [Brunswick Green](http://www.thebrunswickgreen.com)
+* [Spotted Mallard](https://www.spottedmallard.com)
 
 **To-Do**
 
 * [The Fitzroy Pinnacle](https://www.fitzroypinnacle.com.au) - PDF
 * [The Rooks Return](http://therooksreturn.com.au) - Facebook Feed (seems empty for gigs)
-* [Brunswick Green](http://www.thebrunswickgreen.com) - Squarespace
-* [Spotted Mallard](https://www.spottedmallard.com)
 * [Arts Centre](https://artscentremelbourne.com.au) - Need a genre filter for jazz/blues/funk
 * [The Night Cat](https://www.thenightcat.com.au)
 * [Dizzy Jazz Club](https://www.dizzys.com.au) - Once it reopens again
