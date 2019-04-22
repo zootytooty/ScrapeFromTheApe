@@ -10,6 +10,11 @@ import scrapy
 import dateparser
 import re
 
+# Utility Fns
+import scrape_from_the_ape.utils.datetime_helpers as dth
+import scrape_from_the_ape.utils.utils as ut
+
+
 def bar303_event_parser(in_event, base_url : str):
     """Main process to enrich & return gig data
     
@@ -23,14 +28,21 @@ def bar303_event_parser(in_event, base_url : str):
 
     gig = ScrapeFromTheApeItem()
     descrip_html = parse_event_description(in_event)
-    price = parse_event_cost(descrip_html)
-    doors_open = calc_open_doors(descrip_html)
 
-    gig['date'] = get_event_date(in_event) 
-    gig['doors_open'] = calc_open_doors(descrip_html)
-    gig['music_starts'] = get_start_time(in_event)
-    gig['desc'] = descrip_html
-    gig['price'] = parse_event_cost(descrip_html)
+    price = parse_event_cost(descrip_html)
+    price = ut.parse_price(price)
+
+    doors_open = calc_open_doors(descrip_html)
+    doors_open = dth.get_timestamp(doors_open)
+
+    music_starts = get_start_time(in_event)
+    music_starts = dth.get_timestamp(music_starts)
+
+    gig['performance_date'] = get_event_date(in_event) 
+    gig['doors_open'] = doors_open
+    gig['music_starts'] = music_starts
+    gig['description'] = descrip_html
+    gig['price'] = price
     
     
     # Get the main image, or an alternate if it doesn't exist
