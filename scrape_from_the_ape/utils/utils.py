@@ -21,7 +21,9 @@ def parse_price(price):
 
     price = price.lower()
 
-    if "free" in price:
+    if price == '':
+        return 0
+    elif "free" in price:
         return 0
     else:
         matches = re.findall(r"\$\d+(?:\.\d+)?", price)

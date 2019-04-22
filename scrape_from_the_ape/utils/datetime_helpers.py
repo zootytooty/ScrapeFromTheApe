@@ -74,13 +74,21 @@ def get_timestamp(time_string):
     Returns:
         str: Timestamp in format HH:MM
     """
-    matches = re.findall(r"(\d{0,2}(?:.|:)\d{0,2}\s?(?:AM|PM|pm|am))|(\d{2}(?:.|:)\d{0,2})", time_string)
-    matches = matches[0]
-    matches = [x.strip() for x in matches if x != '']
-    if len(matches) == 1:
-        match = matches[0]
-        match = time_parser(match)
-        return match
+
+    if time_string:
+        matches = re.findall(r"(\d{0,2}(?:.|:)\d{0,2}\s?(?:AM|PM|pm|am))|(\d{2}(?:.|:)\d{0,2})", time_string)
+
+        if len(matches) > 0:
+            matches = matches[0]
+            matches = [x.strip() for x in matches if x != '']
+            if len(matches) == 1:
+                match = matches[0]
+                match = time_parser(match)
+                return match
+            else:
+                return None
+        else:
+            return None
     else:
         return None
 
