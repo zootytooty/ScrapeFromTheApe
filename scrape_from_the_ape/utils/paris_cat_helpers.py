@@ -5,6 +5,7 @@ Desc:  A collection of utility functions to organise parsing Paris Cat
 
 import requests
 from datetime import datetime
+import re
 from bs4 import BeautifulSoup as bs
 from bs4.element import Tag
 from ..items import *
@@ -38,7 +39,7 @@ def name_splitter(name: str):
     title = None
     start_time = None
 
-    # Generally titla & start time are provided in a single string split by either "//" or "/"
+    # Generally title & start time are provided in a single string split by either "//" or "/"
     start_name_split = [x.strip('/').strip() for x in name.split('/',1) if x != '']
     if len(start_name_split) == 2:
         title = start_name_split[1]
@@ -67,6 +68,9 @@ def pariscat_gig_parser(gig: dict):
 
     # Title & start time are provided in a single string split by "//"
     start_time, title = name_splitter(gig['name'])
+    if start_time:
+        start_time = get_timestamp(start_time)
+    # start_time = datetime.strptime(start_time, '%I.%M%p').strftime("%H:%M")
 
     # Get long description
     desc = description_getter(gig['productId'],
@@ -75,20 +79,107 @@ def pariscat_gig_parser(gig: dict):
                    gig['description']
                    )
 
+    # Clean up doors open
+    doors_open = gig['availabilityDescriptionOverride'].replace('doors open ', '')
+    if doors_open:
+        doors_open = get_timestamp(doors_open)
+    # doors_open = datetime.strptime(doors_open, '%I.%M%p').strftime("%H:%M")
+
     # Instantiate Return Object
     item = ScrapeFromTheApeItem()
 
     # Fill
     item['title'] = title
     item['music_starts'] = start_time
-    item['doors_open'] = gig['availabilityDescriptionOverride'].replace('doors open ', '')
-    item['date'] = datetime.strptime(str(gig['dateIndex']), "%Y%m%d").strftime("%Y-%m-%d")
-    item['price'] = gig['totalCostDescription']
-    item['desc'] = desc
+    item['doors_open'] = doors_open
+    item['performance_date'] = datetime.strptime(str(gig['dateIndex']), "%Y%m%d").strftime("%Y-%m-%d")
+    item['price'] = float(gig['totalCostDescription'].replace('$',''))
+    item['description'] = desc
     item['url'] = gig['detailsUrl']
     item['image_url'] = gig['imageUrl']
 
     return item
+
+
+
+def time_parser(time):
+    """Converts timestamps into a consistent computer usable form.
+    Handles timestamps of the format:
+        - 1.00PM (or AM)
+        - 1:00PM (or AM)
+        - 1PM (or AM)
+        - 13:00
+
+    Args:
+        time (str): Timestamp to be standardised 
+    
+    Returns:
+        str: Timestamp in format HH:MM
+    """
+
+    time = time.lower()
+
+    # Idenfiy delimiter 
+    raw_time = time.replace('pm','').replace('am','').strip()
+    if '.' in time:
+        delimiter = '.'
+    elif ':' in time:
+        delimiter = ':'
+    else:
+        delimiter = ':'
+        raw_time += ':00'
+
+    # Identify whether it's in 12hr or 24hr time
+    if 'pm' in time:
+        time_to_parse = "{} pm".format(raw_time)
+        time_format = "%I{}%M %p".format(delimiter)
+        
+        clean_time = datetime.strptime(time_to_parse, time_format).strftime("%H:%M")
+
+    elif 'am' in time:
+        time_to_parse = "{} am".format(raw_time)
+        time_format = "%I{}%M %p".format(delimiter)
+        
+        clean_time = datetime.strptime(time_to_parse, time_format).strftime("%H:%M")
+        
+    else:
+        clean_time = datetime.strptime(time, "%H:%M").strftime("%H:%M")
+
+
+    return clean_time
+
+
+def get_timestamp(time_string):
+    """Identified & extracts a timestamp from a string
+    
+    The currently supported formats are:
+        - 01am
+        - 1am
+        - 12am
+        - 12 am
+        - 1 am
+        - 12:12am
+        - 12:12 am
+        - 12.12am
+        - 12.12 am
+    
+    Args:
+        time_string (str): String that contains a timestamp
+    
+    Returns:
+        str: Timestamp in format HH:MM
+    """
+    matches = re.findall(r"(\d{0,2}(?:.|:)\d{0,2}\s?(?:AM|PM|pm|am))|(\d{2}(?:.|:)\d{0,2})", time_string)
+    matches = matches[0]
+    matches = [x.strip() for x in matches if x != '']
+    if len(matches) == 1:
+        match = matches[0]
+        match = time_parser(match)
+        return match
+    else:
+        return None
+
+
 
 
 #********************************************************
