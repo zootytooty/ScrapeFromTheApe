@@ -6,6 +6,11 @@ import dateparser
 import datetime
 import requests
 
+# Utility Fns
+import scrape_from_the_ape.utils.datetime_helpers as dth
+import scrape_from_the_ape.utils.utils as ut
+
+
 class UptownCafe(scrapy.Spider):
     name = 'uptown_cafe'
 
@@ -40,17 +45,19 @@ class UptownCafe(scrapy.Spider):
                             title = "".join(title[1:])
                         else:
                             title = title[0]
+
                         item['title'] = title
-                        item['date'] = date.strftime("%Y-%m-%d")
-                        item['desc'] = ""
-                        item['price'] = ""
+                        item['performance_date'] = date.strftime("%Y-%m-%d")
+                        item['description'] = ""
+                        item['price'] = ut.parse_price("")
                         item['image_url'] = ""
-                        # Best guess given the lack of information on the website
-                        item['music_starts'] = "8:30 pm"
-                        item['doors_open'] = "8:00 pm"
+                        
+                        # Best guess given the lack of information on the website                       
+                        item['music_starts'] = dth.get_timestamp("8:30 pm")
+                        item['doors_open'] = dth.get_timestamp("8:00 pm")
                         item['url'] = site_url
                         item['venue'] = self.name
-                        self.dates_time_done.append(''.join([item['date'],item['music_starts']]))
+                        self.dates_time_done.append(''.join([item['performance_date'],item['music_starts']]))
                         gigs.append(item)
             
         shows = response.css('.gig-wrap')
@@ -80,30 +87,30 @@ class UptownCafe(scrapy.Spider):
                 dateFound = True
                 date = dateparser.parse(date[0])
                 date = date.strftime("%Y-%m-%d")
-                item['date'] = date
+                item['performance_date'] = date
             else:
-                item['date'] = ""
+                item['performance_date'] = None
             if time:
                 # Should parse the time here!
                 timeFound = True
                 time = dateparser.parse(time[0])
-                item['music_starts'] = time.strftime("%-I:%M %p")
+                item['music_starts'] = dth.get_timestamp(time.strftime("%-I:%M %p"))
             else:
                 # This place always starts music at 8:30, but often there are two sets of things, so this needs attention
-                item['music_starts'] = "8:30 pm"
+                item['music_starts'] = dth.get_timestamp("8:30 pm")
             
             #Check for a duplicate and store index for later
             
             index_of_duplicate = 0
             try:
-                index_of_duplicate = self.dates_time_done.index(''.join([item['date'],item['music_starts']]))
+                index_of_duplicate = self.dates_time_done.index(''.join([item['performance_date'],item['music_starts']]))
                 duplicate_entry_found = True
             except ValueError:
                 duplicate_entry_found = False
                 
             
             # Best guess given the lack of information on the website
-            item['doors_open'] = "8:00 pm"
+            item['doors_open'] = dth.get_timestamp("8:00 pm")
             
             # Now strip the date and time from the h2 elements and hopefully we are left with a title
             descr = re.sub('\d+[:. ]+\d+[ ]*(am|pm)*','',descr,flags=re.IGNORECASE)
@@ -134,12 +141,18 @@ class UptownCafe(scrapy.Spider):
                     price = ""
             else:
                 price = ". ".join(x.strip() for x in price)
+
+            price = ut.parse_price(price)
+
+            
             img = show.css('.gig-info-wrap img::attr(src)').extract_first()
             if not img:
                 img = ''
+            else:
+                img = "{}/{}".format(self.base_url,img)
             site_url = response.request.url
             
-            item['desc'] = descr
+            item['description'] = descr
             item['price'] = price
             item['image_url'] = img
             item['url'] = site_url
@@ -149,7 +162,7 @@ class UptownCafe(scrapy.Spider):
                 gigs[index_of_duplicate] = item
             else:
                 #record the date so no duplicates occur
-                self.dates_time_done.append(''.join([item['date'],item['music_starts']]))
+                self.dates_time_done.append(''.join([item['performance_date'],item['music_starts']]))
                 gigs.append(item)
         
         for item in gigs:
