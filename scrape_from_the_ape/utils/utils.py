@@ -28,4 +28,7 @@ def parse_price(price):
     else:
         matches = re.findall(r"\$\d+(?:\.\d+)?", price)
         matches = [float(x.replace("$","")) for x in matches if x != '']
-        return max(matches)
+        if len(matches) > 0:
+            return max(matches)
+        else:
+            return 0
