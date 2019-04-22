@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import scrapy
+from scrape_from_the_ape.utils.jazzlab_helpers import *
 from scrape_from_the_ape.items import *
 
 class JazzlabSpider(scrapy.Spider):
@@ -17,27 +18,6 @@ class JazzlabSpider(scrapy.Spider):
         
         for div in divs:
 
-            gig = ScrapeFromTheApeItem()
+            gig = jazzlab_gig_parser(div = div, venue = self.name, url = self.base_url)
 
-            # Datetime Info
-            date = "{}-{}-{}".format(div.css(".eb-event-date-year::text").extract_first().strip(),
-                                     div.css(".eb-event-date-month::text").extract_first().strip(),
-                                     div.css(".eb-event-date-day::text").extract_first().strip()
-                                )
-            gig['date'] = date
-
-            times = div.css(".eb-time::text").extract()
-            gig['doors_open'] = times[0]
-            if len(times) > 1:
-                gig['music_starts'] = times[1]
-
-            # Show details
-            gig['title'] = div.css(".eb-event-title span[itemprop*='name']::text").extract_first()
-            gig['price'] = div.css(".eb-individual-price::text").extract_first()
-            gig['desc'] = ' '.join([x for x in div.css(".eb-description-details p::text").extract()])
-            gig['url'] = "{}{}".format(self.base_url, div.css(".eb-event-title::attr(href)").extract_first())
-            gig['image_url'] = "{}{}".format(self.base_url, div.css(".eb-modal::attr(href)").extract_first())
-
-            gig['venue'] = self.name
-            
             yield gig
