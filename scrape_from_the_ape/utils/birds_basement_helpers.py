@@ -9,6 +9,10 @@ import requests
 from scrape_from_the_ape.items import *
 import scrapy
 
+# Utility Fns
+import scrape_from_the_ape.utils.datetime_helpers as dth
+import scrape_from_the_ape.utils.utils as ut
+
 
 def content_extractor(html):
     """Extract show objects from raw HTML
@@ -23,7 +27,7 @@ def content_extractor(html):
     # Shows are JSON objects within JS scripts
     scripts = html.css("script::text").extract()
 
-    # showz is the variable now with show objects
+    # "showz" is the variable now with show objects
     shows = [script for script in scripts if "var showz = " in script]
     show_splits = shows[0].split("var showz = ")
 
@@ -71,7 +75,10 @@ def birds_parser(gig: dict):
 
     # Determine doors open & start time
     start_time = get_start_time(gig['urlInfo'])
+    start_time = dth.get_timestamp(start_time)
+
     doors_open = calc_open_doors(start_time)
+    doors_open = dth.get_timestamp(doors_open)
 
     # For consistency we want a new object for each date a show is to be played
     gigs = []
@@ -82,9 +89,9 @@ def birds_parser(gig: dict):
         item['title'] = gig['title']
         item['music_starts'] = start_time
         item['doors_open'] = doors_open
-        item['date'] = date
-        item['price'] = gig['price']
-        item['desc'] = gig['text']
+        item['performance_date'] = date
+        item['price'] = ut.parse_price(gig['price'])
+        item['description'] = gig['text']
         item['url'] = gig['urlInfo']
         item['image_url'] = gig['imgUrl']
 
@@ -154,11 +161,10 @@ def calc_open_doors(start_time: str):
     """
 
     # Convert to proper time object
-    start_time = start_time.lower().replace('am','').replace('pm','').strip()
     start_time = datetime.strptime(start_time, '%H:%M')
     
     # Early gigs
     if start_time.hour < 10:
-        return "6:00 pm"
+        return "18:00"
     else:
-        return "10:00 pm"
+        return "22:00"
