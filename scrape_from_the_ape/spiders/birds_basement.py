@@ -1,24 +1,41 @@
-# -*- coding: utf-8 -*-
+"""Birds Basement Spider Entrypoint."""
+
+from typing import Generator
+
+from scrape_from_the_ape.items import ScrapeFromTheApeItem
+from scrape_from_the_ape.utils.birds_basement_helpers import birds_parser
+
 import scrapy
-from scrape_from_the_ape.items import *
-from scrape_from_the_ape.utils.birds_basement_helpers import *
 
 
 class BirdsBasementSpider(scrapy.Spider):
-    name = 'birds_basement'
+    """Birds Basement Spider.
 
+    Args:
+        scrapy (scrapy.Spider): Scrapy Spider
+
+    Yields:
+        ScrapeFromTheApeItem: Conformed gig
+    """
+
+    name = "birds_basement"
     start_urls = ["https://birdsbasement.com/whats-on"]
 
-    def parse(self, response):
-        
-        # Extract JSON Objects, aka show details, from response
-        shows = content_extractor(response)
+    def parse(
+        self: object, response: scrapy.http.TextResponse
+    ) -> Generator[ScrapeFromTheApeItem, None, None]:
+        """Method to parse each Birds Basement site & extract gig details.
 
-        # Parse each show
-        for show in shows:
-            gigs = birds_parser(show)
+        Args:
+            response (scrapy.http.TextResponse): Birds Basement Homepage
 
-            # Return each gig object back for scrapy to capture
-            for gig in gigs:
-                gig['venue'] = self.name
-                yield gig
+        Yields:
+            Generator[ScrapeFromTheApeItem]: Each scraped gig
+        """
+        # Parse the whole site in one big bang
+        gigs = birds_parser(response)
+
+        # Return each gig object back for scrapy to capture
+        for gig in gigs:
+            gig["venue"] = self.name
+            yield gig
