@@ -10,12 +10,6 @@ import scrapy
 import dateparser
 import re
 
-# Utility Fns
-import scrape_from_the_ape.utils.datetime_helpers as dth
-import scrape_from_the_ape.utils.utils as ut
-
-
-
 def open_studio_event_parser(in_event):
     """Main process to enrich & return gig data
     
@@ -27,23 +21,17 @@ def open_studio_event_parser(in_event):
     """
 
     gig = ScrapeFromTheApeItem()
-
     date = get_event_date(in_event)  
     start_time = get_start_time(in_event)
-    start_time = dth.get_timestamp(start_time)
 
-    doors_open = calc_open_doors(date)
-    doors_open = dth.get_timestamp(doors_open)
-
-    gig['performance_date'] = date
-    gig['doors_open'] = doors_open
+    gig['date'] = date
+    gig['doors_open'] = calc_open_doors(date)
     gig['music_starts'] = start_time
     
-    # Clean up the markup, there are lots of empty divs shoving a \n into our description
+    #Clean up the markup, there are lots of empty divs shoving a \n into our description
     descr = parse_event_description(in_event)
     #Clean up the price
     price = parse_event_cost(in_event)
-    price = ut.parse_price(price)
 
     # Show details
     gig['title'] = in_event.css(".tribe-events-single-event-title::text").extract_first()
@@ -63,6 +51,7 @@ def parse_event_cost(in_event):
     
     Returns:
         str: Event Cost, empty string if cannot find something
+    
     """
 
     temp_price = in_event.css(".tribe-events-event-cost2::text").extract_first()

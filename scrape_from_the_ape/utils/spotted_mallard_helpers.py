@@ -10,12 +10,6 @@ import scrapy
 import dateparser
 import re
 
-# Utility Fns
-import scrape_from_the_ape.utils.datetime_helpers as dth
-import scrape_from_the_ape.utils.utils as ut
-
-
-
 def spotted_mallard_event_parser(in_event, base_url : str):
     """Main process to enrich & return gig data
     
@@ -36,30 +30,23 @@ def spotted_mallard_event_parser(in_event, base_url : str):
 
     gig = ScrapeFromTheApeItem()
     descrip_html = parse_event_description(fullevent)
-    
-    doors_open = calc_open_doors(descrip_html)
-    doors_open = dth.get_timestamp(doors_open)
-
     price = parse_event_cost(fullevent)
-    price = ut.parse_price(price)
-
-    music_starts_raw = get_start_time(fullevent)
+    doors_open = calc_open_doors(descrip_html)
 
     gig['performance_date'] = get_event_date(fullevent) 
     gig['doors_open'] = calc_open_doors(descrip_html)
-    gig['music_starts'] = dth.get_timestamp(music_starts_raw)
+    gig['music_starts'] = get_start_time(fullevent)
     gig['description'] = descrip_html
-    gig['price'] = price
+    gig['price'] = parse_event_cost(fullevent)
     
     # Need to fix this up, as we probably should use the open hours of the venue if we cannot find doors open time
     if gig['doors_open'] is None:
-    	start_hour = int(re.search("\d+",music_starts_raw,re.I)[0])
+    	start_hour = int(re.search("\d+",gig['music_starts'],re.I)[0])
     	if start_hour > 7:
-    		gig['doors_open'] = dth.get_timestamp("7:00 pm")
+    		gig['doors_open'] = "7:00 pm"
     	else:
-            doors_open = "".join([str(start_hour),":00 pm"])
-            gig['doors_open'] = dth.get_timestamp(doors_open)
-    
+    		gig['doors_open'] = "".join([str(start_hour),":00 pm"])
+    	
     
     # Get the main image, or an search the description for an alternate if it doesn't exist, squarepsace uses data-src and imageloader from bootstrap to do fancy image loading. This means the src in the thumbnail is non existant on load
     #img = in_event.css(".eventlist-column-thumbnail img::attr(data-src)").extract_first()
