@@ -54,3 +54,12 @@ To run all spiders, run:
 ```bash
 python crawl_all.py
 ```
+
+## Deployment
+
+The API is managed via the [serverless framework](https://www.serverless.com/), using an AWS backend. To deploy, install the dependencies then run deploy using your desired AWS profile.
+
+```bash
+npm install
+sls deploy --aws-profile <profile-name>
+```

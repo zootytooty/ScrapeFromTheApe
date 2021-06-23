@@ -3,8 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-*.json
+node_modules/
 
+.serverless/
 
 # C extensions
 *.so
@@ -106,3 +107,6 @@ venv.bak/
 # mypy
 .mypy_cache/
 conf.yaml
+scrape from the ape-_star_-ap-southeast-2-policy.json
+scrape-from-the-ape-_star_-ap-southeast-2-policy.json
+scraped_gigs.json
