@@ -12,6 +12,8 @@ functions:
     handler: spider.crawl
     include:
       - scrape_from_the_ape/**
+    events:
+      - schedule: rate(24 hours)
 
 
 plugins:
