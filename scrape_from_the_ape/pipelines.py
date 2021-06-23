@@ -4,7 +4,7 @@ import requests
 
 from scrape_from_the_ape.items import ScrapeFromTheApeItem
 
-import scrapy.spider
+from scrapy import spiders
 
 
 class ScrapeFromTheApePipeline(object):
@@ -14,13 +14,13 @@ class ScrapeFromTheApePipeline(object):
         """Sets up object to store identified gigs."""
         self.all_gigs = []
 
-    def close_spider(self: object, spider: scrapy.spider) -> None:
+    def close_spider(self: object, spider: spiders) -> None:
         """Save all results to the database.
 
         Runs after scraping the sight
 
         Args:
-            spider (scrapy.spider): Scrapy Spider
+            spider (spider): Scrapy Spider
         """
         _ = requests.post(
             url="https://v3dl6mmgz1.execute-api.ap-southeast-2.amazonaws.com/dev/gigs",
@@ -28,13 +28,13 @@ class ScrapeFromTheApePipeline(object):
         )
 
     def process_item(
-        self, item: ScrapeFromTheApeItem, spider: scrapy.spider
+        self, item: ScrapeFromTheApeItem, spider: spiders
     ) -> ScrapeFromTheApeItem:
         """Store each scraped gig for later upload to DB.
 
         Args:
             item (ScrapeFromTheApeItem]): Scraped gig to store
-            spider (scrapy.spider): Scrapy Spider
+            spider (spider): Scrapy Spider
 
         Returns:
             ScrapeFromTheApeItem: Return the input item to carry on with
