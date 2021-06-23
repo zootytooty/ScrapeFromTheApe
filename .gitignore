@@ -108,3 +108,5 @@ venv.bak/
 .mypy_cache/
 conf.yaml
 scrape from the ape-_star_-ap-southeast-2-policy.json
+scrape-from-the-ape-_star_-ap-southeast-2-policy.json
+scraped_gigs.json

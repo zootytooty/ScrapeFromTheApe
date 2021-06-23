@@ -1,0 +1,24 @@
+service: scrape-from-the-ape
+
+provider:
+  name: aws
+  timeout: 300
+  runtime: python3.8
+  region: ${env:AWS_REGION}
+
+
+functions:
+  crawl:
+    handler: spider.crawl
+    include:
+      - scrape_from_the_ape/**
+
+
+plugins:
+  - serverless-python-requirements
+custom:
+  pythonRequirements:
+    dockerizePip: true
+
+package:
+  individually: true
