@@ -30,6 +30,7 @@ Melbourne jazz gig scraper. The scaper is designed for:
 * [Claypots Seafood Bar](http://claypots.com.au) - Website down, only facebook at the moment
 * [Rainbow Hotel](http://therainbow.com.au)
 * [La Niche Cafe](https://lanichefitzroy.com)
+* New version of [Jaspers](https://www.instagram.com/jaspersclub/?hl=en) once it opens
 
 
 ### Something Missing?
