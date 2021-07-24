@@ -63,9 +63,10 @@ def get_description(gig_url: str) -> str:
         gigpage.css(".eventitem-column-content").css(".sqs-block-content").xpath("//p")
     )
 
+    # strip the last two paragraphs - an empty string and a square space plug
     description = "\n".join(
         "".join(line.strip() for line in p.xpath(".//text()").extract() if line.strip())
-        for p in event
+        for p in event[:-2]
     )
 
     return description
