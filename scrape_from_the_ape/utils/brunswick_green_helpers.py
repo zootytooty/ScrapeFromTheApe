@@ -49,4 +49,23 @@ def get_description(gig_url: str) -> str:
 
     """
 
-    return "giggity"
+    gigpage = scrapy.http.HtmlResponse(
+        url="Gig",
+        body=(
+            requests.get(
+                "http://www.thebrunswickgreen.com/gigs-at-the-green/2021/3/21/the-steamboat-whistlers"
+            )
+        ).text,
+        encoding="utf-8",
+    )
+
+    event = (
+        gigpage.css(".eventitem-column-content").css(".sqs-block-content").xpath("//p")
+    )
+
+    description = "\n".join(
+        "".join(line.strip() for line in p.xpath(".//text()").extract() if line.strip())
+        for p in event
+    )
+
+    return description
