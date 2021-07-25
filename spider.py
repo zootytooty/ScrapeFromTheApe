@@ -22,7 +22,7 @@ def crawl(event: dict, context: object) -> None:
 
     # Add each spider to the crawler process
     # for spider_name in process.spiders.list():
-    for spider_name in ["jazzlab", "birds_basement", "paris_cat"]:
+    for spider_name in ["jazzlab", "birds_basement", "paris_cat", "brunswick_green"]:
         print("Running spider: {}".format(spider_name))
         process.crawl(spider_name)
 
