@@ -6,14 +6,13 @@ Melbourne jazz gig scraper. The scaper is designed for:
 * [Paris Cat](http://pariscat.com.au/)
 * [Jazzlab](https://jazzlab.club/)
 * [Birds Basement](https://birdsbasement.com)
+* [Brunswick Green](http://www.thebrunswickgreen.com)
 
 
 ### Implemented & Not Working
 * [Open Studio](http://openstudio.net.au)
 * [Bar 303](http://303.net.au)
 * [Uptown](https://www.uptownjazzcafe.com)
-* [Brunswick Green](http://www.thebrunswickgreen.com)
-  * Has an [API](http://www.thebrunswickgreen.com/api/open/GetItemsByMonth?month=07-2021&collectionId=59ef037d017db2e4f36ff118&crumb=BS88q3Z3Ue3iMTU4NjE3ODM3OGFlNTNhZjE4ZDdlOTAwZjM0NDk2)
 * [Spotted Mallard](https://www.spottedmallard.com)
 
 ### To-Do
