@@ -32,6 +32,7 @@ Melbourne jazz gig scraper. The scaper is designed for:
 * [La Niche Cafe](https://lanichefitzroy.com)
 * New version of [Jaspers](https://www.instagram.com/jaspersclub/?hl=en) once it opens
 * [The Moldy Fig](https://themoldyfig.com.au/)
+* [Candlelight Series](https://feverup.com/melbourne/search?q=candlelight)
 
 
 ### Something Missing?
