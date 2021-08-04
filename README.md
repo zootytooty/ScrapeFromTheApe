@@ -7,12 +7,12 @@ Melbourne jazz gig scraper. The scaper is designed for:
 * [Jazzlab](https://jazzlab.club/)
 * [Birds Basement](https://birdsbasement.com)
 * [Brunswick Green](http://www.thebrunswickgreen.com)
+* [Uptown](https://www.uptownjazzcafe.com)
 
 
 ### Implemented & Not Working
 * [Open Studio](http://openstudio.net.au)
 * [Bar 303](http://303.net.au)
-* [Uptown](https://www.uptownjazzcafe.com)
 * [Spotted Mallard](https://www.spottedmallard.com)
 
 ### To-Do
@@ -33,6 +33,7 @@ Melbourne jazz gig scraper. The scaper is designed for:
 * New version of [Jaspers](https://www.instagram.com/jaspersclub/?hl=en) once it opens
 * [The Moldy Fig](https://themoldyfig.com.au/)
 * [Candlelight Series](https://feverup.com/melbourne/search?q=candlelight)
+* [Lebowskis Music](http://www.lebowskismusic.com/)
 
 
 ### Something Missing?
