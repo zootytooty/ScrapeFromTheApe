@@ -4,7 +4,7 @@ Desc: A collection of utility functions to organise parsing of Open Studio
 """
 
 import requests
-from datetime import datetime
+from datetime import datetime, timedelta
 from scrape_from_the_ape.items import *
 
 BASE_URL = "https://thebrunswickgreen.com"
@@ -27,8 +27,10 @@ def brunswick_green_event_parser(gig: dict) -> ScrapeFromTheApeItem:
     item = ScrapeFromTheApeItem()
 
     item["title"] = gig["title"]
-    item["music_starts"] = start_datetime.strftime("%Y-%m-%d %H:%M:%S")
-    item["doors_open"] = start_datetime.strftime("%Y-%m-%d")
+    item["music_starts"] = start_datetime.strftime("%H:%M")
+
+    # Assume doors open 30min before music starts
+    item["doors_open"] = (start_datetime - timedelta(minutes=30)).strftime("%H:%M")
     item["performance_date"] = start_datetime.strftime("%Y-%m-%d")
     item["price"] = 0.00  # no prices in API, gig page, or when following ticket links 😟
     item["description"] = get_description(gig_url)
