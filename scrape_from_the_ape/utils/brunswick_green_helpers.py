@@ -53,11 +53,7 @@ def get_description(gig_url: str) -> str:
 
     gigpage = scrapy.http.HtmlResponse(
         url="Gig",
-        body=(
-            requests.get(
-                "http://www.thebrunswickgreen.com/gigs-at-the-green/2021/3/21/the-steamboat-whistlers"
-            )
-        ).text,
+        body=(requests.get(gig_url)).text,
         encoding="utf-8",
     )
 
